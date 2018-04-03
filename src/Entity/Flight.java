@@ -1,6 +1,7 @@
 package Entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeMap;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 
@@ -17,13 +18,13 @@ public class Flight {
     public double cruiseTimeUpper;
     public Flight nextFlight; // //заполняется после добавления всех флайтов одного пути
     public int idleTime; //заполняется после добавления всех флайтов одного пути
-    public ArrayList<Flight> p = new ArrayList<>(); //заполняется после добавления всех флайтов
+    public ArrayList<Flight> pasConnected = new ArrayList<>(); //заполняется после добавления всех флайтов
     public Airport originAirport; //в конструкторе
     public Airport destinationAirport; //в конструкторе
     public double congestionOrigin; //в конструкторе
     public double congestionDestination; //в конструкторе
-    public TreeMap<Flight, Integer> turnTime = new TreeMap<>(); //заполняется после заполнения листа p
-    public TreeMap<Flight, Double> serviceLevel = new TreeMap<>(); //считается после заполенения turnTime;
+    public HashMap<Integer, Integer> turnTime = new HashMap<>(); //заполняется после заполнения листа p
+    public HashMap<Integer, Double> serviceLevel = new HashMap<>(); //считается после заполенения turnTime;
     //time window for departure time
     public int depTimeLower;
     public int depTimeUpper;
@@ -138,12 +139,12 @@ public class Flight {
         this.idleTime = idleTime;
     }
 
-    public ArrayList<Flight> getP() {
-        return p;
+    public ArrayList<Flight> getPasConnected() {
+        return pasConnected;
     }
 
-    public void setP(ArrayList<Flight> p) {
-        this.p = p;
+    public void addToPasConnected(Flight flight) {
+        pasConnected.add(flight);
     }
 
     public double getCongestionOrigin() {
@@ -162,19 +163,24 @@ public class Flight {
         this.congestionDestination = congestionDestination;
     }
 
-    public TreeMap<Flight, Integer> getTurnTime() {
+    public HashMap<Integer, Integer> getTurnTime() {
         return turnTime;
     }
 
-    public void setTurnTime(TreeMap<Flight, Integer> turnTime) {
-        this.turnTime = turnTime;
+    public void setTurnTime(Flight flightCon) {
+        int lowBound = 25;
+        int uppBound = 40;
+        UniformIntegerDistribution dist = new UniformIntegerDistribution(lowBound, uppBound);
+        double sample = dist.sample();
+        int turnTime = (int)sample;
+        this.turnTime.put(flightCon.getId(), turnTime);
     }
 
-    public TreeMap<Flight, Double> getServiceLevel() {
+    public HashMap<Integer, Double> getServiceLevel() {
         return serviceLevel;
     }
 
-    public void setServiceLevel(TreeMap<Flight, Double> serviceLevel) {
+    public void setServiceLevel(HashMap<Integer, Double> serviceLevel) {
         this.serviceLevel = serviceLevel;
     }
 
@@ -221,5 +227,21 @@ public class Flight {
 
     public void setNextFlight(Flight nextFlight) {
         this.nextFlight = nextFlight;
+    }
+
+    public Airport getOriginAirport() {
+        return originAirport;
+    }
+
+    public void setOriginAirport(Airport originAirport) {
+        this.originAirport = originAirport;
+    }
+
+    public Airport getDestinationAirport() {
+        return destinationAirport;
+    }
+
+    public void setDestinationAirport(Airport destinationAirport) {
+        this.destinationAirport = destinationAirport;
     }
 }
