@@ -14,8 +14,8 @@ public class Flight {
     public int cruiseTime; //в конструкторе
     public int actualNonCruiseTime; // в setActualNonCruiseTime
     public double cruiseLenght; //в конструкторе
-    public double cruiseTimeLower;
-    public double cruiseTimeUpper;
+    public int cruiseTimeLower; // в setCruiseTimeLower
+    public int cruiseTimeUpper; // setCruiseTimeUpper
     public Flight nextFlight; // //заполняется после добавления всех флайтов одного пути
     public int idleTime; //заполняется после добавления всех флайтов одного пути
     public ArrayList<Flight> pasConnected = new ArrayList<>(); //заполняется после добавления всех флайтов
@@ -26,15 +26,22 @@ public class Flight {
     public HashMap<Integer, Integer> turnTime = new HashMap<>(); //заполняется после заполнения листа p
     public HashMap<Integer, Double> serviceLevel = new HashMap<>(); //считается после заполенения turnTime;
     //time window for departure time
-    public int depTimeLower;
-    public int depTimeUpper;
-    public double demand; // в setDemand
+    public int depTimeLower; //в конструкторе
+    public int depTimeUpper; //в конструкторе
+    public int arrTimeLower; //в конструкторе
+    public int arrTimeUpper; //в конструкторе
+    public int demand; // в setDemand
     public int turnAroundTime; //в setTurnAroundTime
+    public HashMap<Integer, Double> weights = new HashMap<>();
 
     public Flight(int id, int depTimeInMin, int plannedArrTimeInMin, Path mainPath, Airport originAirport, Airport destinationAirport) {
         this.id = id;
         this.depTimeInMin = depTimeInMin;
+        this.depTimeLower = depTimeInMin - 30;
+        this.depTimeUpper = depTimeInMin + 30;
         this.plannedArrTimeInMin = plannedArrTimeInMin;
+        this.arrTimeLower = plannedArrTimeInMin - 30;
+        this.arrTimeUpper = plannedArrTimeInMin + 30;
         this.cruiseTime = plannedArrTimeInMin - depTimeInMin - 20;
         this.mainPath = mainPath;
         this.cruiseLenght = mainPath.getAssignedAircraftType().getMRCSpeed() * cruiseTime;
@@ -111,20 +118,20 @@ public class Flight {
         this.cruiseLenght = cruiseLenght;
     }
 
-    public double getCruiseTimeLower() {
+    public int getCruiseTimeLower() {
         return cruiseTimeLower;
     }
 
     public void setCruiseTimeLower(double cruiseTimeLower) {
-        this.cruiseTimeLower = cruiseTimeLower;
+        this.cruiseTimeLower = (int)cruiseTimeLower;
     }
 
-    public double getCruiseTimeUpper() {
+    public int getCruiseTimeUpper() {
         return cruiseTimeUpper;
     }
 
     public void setCruiseTimeUpper(double cruiseTimeUpper) {
-        this.cruiseTimeUpper = cruiseTimeUpper;
+        this.cruiseTimeUpper = (int)cruiseTimeUpper;
     }
 
     public int getIdleTime() {
@@ -180,8 +187,9 @@ public class Flight {
         return serviceLevel;
     }
 
-    public void setServiceLevel(HashMap<Integer, Double> serviceLevel) {
-        this.serviceLevel = serviceLevel;
+    public void setServiceLevel(double serviceLevel, Flight flight) {
+
+        this.serviceLevel.put(flight.getId(), serviceLevel);
     }
 
     public int getDepTimeLower() {
@@ -200,7 +208,7 @@ public class Flight {
         this.depTimeUpper = depTimeUpper;
     }
 
-    public double getDemand() {
+    public int getDemand() {
         return demand;
     }
 
@@ -209,7 +217,7 @@ public class Flight {
         int uppBound = mainPath.getAssignedAircraftType().getUppBoundDemand();
         UniformIntegerDistribution dist = new UniformIntegerDistribution(lowBound, uppBound);
         double sample = dist.sample();
-        this.demand = sample;
+        this.demand = (int)sample;
     }
 
     public double getTurnAroundTime() {
@@ -217,7 +225,7 @@ public class Flight {
     }
 
     public void setTurnAroundTime(double baseTurnTime) {
-        double time = baseTurnTime * congestionDestination;
+        double time = baseTurnTime * congestionDestination * 0.70;
         this.turnAroundTime = (int)time;
     }
 
@@ -244,4 +252,14 @@ public class Flight {
     public void setDestinationAirport(Airport destinationAirport) {
         this.destinationAirport = destinationAirport;
     }
+
+    public HashMap<Integer, Double> getWeights() {
+        return weights;
+    }
+
+    public void setWeights(Flight flight, double weight) {
+        this.weights.put(flight.getId(), weight);
+    }
+
+
 }

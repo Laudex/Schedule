@@ -25,37 +25,78 @@ public class FlightFactory {
 
     public void setIdleTime(Flight... flights) {
         for (int i = 0; i < flights.length; i++) {
-            if (flights[i].getNextFlight() != null){
+            if (flights[i].getNextFlight() != null) {
                 flights[i].setIdleTime();
             }
         }
     }
-    public void setTurnTime(ArrayList<Flight> flights){
-        for (Flight flight : flights){
-            if(!flight.getPasConnected().isEmpty()){
-                ArrayList<Flight> pasConnected = flight.getPasConnected();
-                for (Flight flightCon : pasConnected){
-                    flight.setTurnTime(flightCon);
-                }
+
+    public ArrayList<Flight> getConnectedFlights(ArrayList<Flight> flights) {
+        ArrayList<Flight> connectedFlights = new ArrayList<>();
+        for (Flight flight : flights) {
+            if (!flight.getPasConnected().isEmpty()) {
+                connectedFlights.add(flight);
+            }
+        }
+        return connectedFlights;
+    }
+
+    public void setTurnTime(ArrayList<Flight> flights) {
+        for (Flight flight : flights) {
+            ArrayList<Flight> pasConnected = flight.getPasConnected();
+            for (Flight flightCon : pasConnected) {
+                flight.setTurnTime(flightCon);
             }
         }
     }
 
-    public void setServiceLevel(ArrayList<Flight> flights){
-        for (Flight flight : flights){
-            if(!flight.getPasConnected().isEmpty()){
-                ArrayList<Flight> pasConnected = flight.getPasConnected();
-                for (Flight flightCon : pasConnected){
-                    int first = flightCon.getDepTimeInMin() - flight.getDepTimeInMin() - flight.getTurnTime().get(flightCon.getId()) - flight.getCruiseTime();
-                    double second = first / scaleParameter;
-                    double betta = tailParameter * flight.getCongestionOrigin() * flight.getCongestionOrigin() * flight.getCongestionDestination() * flight.getCongestionDestination();
-                    second = second * Math.pow(2, betta);
-                    second = Math.pow(second, 1.0/betta);
-                    second = 1.0/second;
-                    double third = 1 - second;
-                    int serviceLevel = (int)third;
-                }
+    public void setServiceLevel(ArrayList<Flight> flights) {
+        for (Flight flight : flights) {
+            ArrayList<Flight> pasConnected = flight.getPasConnected();
+            for (Flight flightCon : pasConnected) {
+                flight.setServiceLevel(0.5, flightCon);
             }
+        }
+    }
+
+    public void setWeights(ArrayList<Flight> flights) {
+        int fullDemand = 0;
+        for (Flight flight : flights) {
+            ArrayList<Flight> pasConnected = flight.getPasConnected();
+            for (Flight flightCon : pasConnected) {
+                int demand1 = flight.getDemand();
+                int demand2 = flightCon.getDemand();
+                if (demand1 > demand2) {
+                    fullDemand = fullDemand + demand2;
+                } else {
+                    fullDemand = fullDemand + demand1;
+                }
+
+            }
+        }
+        //System.out.println(fullDemand);
+        for (Flight flight : flights) {
+            ArrayList<Flight> pasConnected = flight.getPasConnected();
+            for (Flight flightCon : pasConnected) {
+                double weight;
+                double demand1 = (double)flight.getDemand();
+                double demand2 = (double)flightCon.getDemand();
+                if (demand1 > demand2) {
+                    weight = demand2 / fullDemand;
+                } else {
+                    weight = demand1 / fullDemand;
+                }
+                flight.setWeights(flightCon, weight);
+            }
+        }
+    }
+    public void setCruiseTimeBounds(ArrayList<Flight> flights){
+        for(Flight flight : flights){
+            double upper = flight.getCruiseLenght() / flight.getMainPath().getAssignedAircraftType().getMRCSpeed();
+            double lower = upper * 0.85;
+            upper = Math.round(upper);
+            flight.setCruiseTimeUpper(upper);
+            flight.setCruiseTimeLower(lower);
         }
     }
 }

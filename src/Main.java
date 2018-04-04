@@ -1,3 +1,4 @@
+import Algorithm.LocalSearch;
 import Entity.AircraftType;
 import Entity.Airport;
 import Entity.Flight;
@@ -223,16 +224,22 @@ public class Main {
             }
         }
 
-        flightFactory.setTurnTime(flights);
+        ArrayList<Flight> connectedFlights = flightFactory.getConnectedFlights(flights);
+        flightFactory.setTurnTime(connectedFlights);
+        flightFactory.setServiceLevel(connectedFlights);
+        flightFactory.setWeights(connectedFlights);
 
-        for(Flight f : flights){
+        /*for(Flight f : connectedFlights){
             ArrayList<Flight> p = f.getPasConnected();
             if (!p.isEmpty()){
                 for(Flight flight : p){
-                    System.out.println(f.getId() + " linked with " + flight.getId() + " with TurnTime = " + f.getTurnTime().get(flight.getId()));
+                    System.out.println(f.getId() + " linked with " + flight.getId() + " with Weights = " + f.getServiceLevel().get(flight.getId()));
                 }
             }
-        }
+        }*/
+        flightFactory.setCruiseTimeBounds(flights);
+        LocalSearch localSearch = new LocalSearch();
+        localSearch.firstValidation(flights, connectedFlights);
 
 
 
