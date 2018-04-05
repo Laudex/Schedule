@@ -261,5 +261,19 @@ public class Flight {
         this.weights.put(flight.getId(), weight);
     }
 
+    public int getArrTimeLower() {
+        return arrTimeLower;
+    }
 
+    public void setArrTimeLower(int arrTimeLower) {
+        this.arrTimeLower = arrTimeLower;
+    }
+
+    public int getArrTimeUpper() {
+        return arrTimeUpper;
+    }
+
+    public void setArrTimeUpper(int arrTimeUpper) {
+        this.arrTimeUpper = arrTimeUpper;
+    }
 }
