@@ -39,12 +39,12 @@ public class LocalSearch {
     }
 
     // ограничение (6)
-    public double validateSecondConstraint(ArrayList<Flight> flights){
+    public double validateSecondConstraint(ArrayList<Flight> flights) {
         double validation = 0;
-        for (Flight flight : flights){
+        for (Flight flight : flights) {
             ArrayList<Flight> flightsConnected = flight.getPasConnected();
-            for (Flight flightCon : flightsConnected){
-                if (flight.getServiceLevel().get(flightCon.getId()) < minimumServiceLevelForEachFlight){
+            for (Flight flightCon : flightsConnected) {
+                if (flight.getServiceLevel().get(flightCon.getId()) < minimumServiceLevelForEachFlight) {
                     validation = validation + minimumServiceLevelForEachFlight - flight.getServiceLevel().get(flightCon.getId());
                 }
             }
@@ -54,12 +54,12 @@ public class LocalSearch {
     }
 
     // ограничение (7)
-    public double validateThirdConstraint(ArrayList<Flight> flights){
+    public double validateThirdConstraint(ArrayList<Flight> flights) {
         double validation = 0;
-        for (Flight flight : flights){
-            if (flight.getCruiseTime() >  flight.getCruiseTimeUpper()){
+        for (Flight flight : flights) {
+            if (flight.getCruiseTime() > flight.getCruiseTimeUpper()) {
                 validation = validation + flight.getCruiseTime() - flight.getCruiseTimeUpper();
-            } else if (flight.getCruiseTime() < flight.getCruiseTimeLower()){
+            } else if (flight.getCruiseTime() < flight.getCruiseTimeLower()) {
                 validation = validation + flight.getCruiseTimeLower() - flight.getCruiseTime();
             }
         }
@@ -67,9 +67,9 @@ public class LocalSearch {
     }
 
     // ограничение (8)
-    public double validateFourthConstraint(ArrayList<Flight> flights){
+    public double validateFourthConstraint(ArrayList<Flight> flights) {
         double validation = 0;
-        for (Flight flight : flights){
+        for (Flight flight : flights) {
             if (flight.getNextFlight() != null) {
                 double leftPart = flight.getNextFlight().getDepTimeInMin() - flight.getDepTimeInMin() - flight.getTurnAroundTime() - flight.getCruiseTime() - flight.getActualNonCruiseTime() - flight.getIdleTime();
                 if (leftPart > 0) {
@@ -83,12 +83,12 @@ public class LocalSearch {
     }
 
     //ограничение (9)
-    public double validateFifthConstraint(ArrayList<Flight> flights){
+    public double validateFifthConstraint(ArrayList<Flight> flights) {
         double validation = 0;
-        for(Flight flight : flights){
-            if(flight.getDepTimeInMin() > flight.getDepTimeUpper()){
+        for (Flight flight : flights) {
+            if (flight.getDepTimeInMin() > flight.getDepTimeUpper()) {
                 validation = validation + flight.getDepTimeInMin() - flight.getDepTimeUpper();
-            } else if (flight.getDepTimeInMin() < flight.getDepTimeLower()){
+            } else if (flight.getDepTimeInMin() < flight.getDepTimeLower()) {
                 validation = validation + flight.getDepTimeLower() - flight.getDepTimeInMin();
             }
         }
@@ -96,13 +96,13 @@ public class LocalSearch {
     }
 
     //ограничение (10)
-    public double validateSixthConstraint(ArrayList<Flight> flights){
+    public double validateSixthConstraint(ArrayList<Flight> flights) {
         double validation = 0;
-        for(Flight flight : flights){
+        for (Flight flight : flights) {
             double middlePart = flight.getDepTimeInMin() + flight.getCruiseTime() + flight.getActualNonCruiseTime();
-            if (middlePart > flight.getArrTimeUpper()){
+            if (middlePart > flight.getArrTimeUpper()) {
                 validation = validation + middlePart - flight.getArrTimeUpper();
-            } else if (middlePart < flight.getArrTimeLower()){
+            } else if (middlePart < flight.getArrTimeLower()) {
                 validation = validation + flight.getArrTimeLower() - middlePart;
             }
         }
@@ -110,10 +110,10 @@ public class LocalSearch {
     }
 
     //ограничение (11)
-    public double validateSeventhConstraint(ArrayList<Flight> flights){
+    public double validateSeventhConstraint(ArrayList<Flight> flights) {
         double validation = 0;
-        for (Flight flight : flights){
-            if(flight.getIdleTime() < 0){
+        for (Flight flight : flights) {
+            if (flight.getIdleTime() < 0) {
                 validation = validation - flight.getIdleTime();
             }
         }
@@ -121,19 +121,19 @@ public class LocalSearch {
     }
 
     //ограничение (14)
-    public double validateEighthConstraint(ArrayList<Flight> flights){
+    public double validateEighthConstraint(ArrayList<Flight> flights) {
         double validation = 0;
         double serviceLevel = 0;
         for (Flight flight : flights) {
             ArrayList<Flight> conFlights = flight.getPasConnected();
-            for (Flight conFlight : conFlights){
+            for (Flight conFlight : conFlights) {
                 serviceLevel = serviceLevel + flight.getWeights().get(conFlight.getId()) * flight.getServiceLevel().get(conFlight.getId());
             }
         }
-        if (serviceLevel < serviceLevelBound){
+        if (serviceLevel < serviceLevelBound) {
             validation = validation + serviceLevelBound - serviceLevel;
         }
-        return  validation;
+        return validation;
     }
 
     public void firstValidation(ArrayList<Flight> flights, ArrayList<Flight> conFlights) {
@@ -149,6 +149,29 @@ public class LocalSearch {
         validation8 = validateEighthConstraint(conFlights);
         */
         System.out.println(totalValidation);
+        localSearchExecute(flights, totalValidation, conFlights);
+
+    }
+
+    public void localSearchExecute(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
+        //int i = 1;
+        for(int i = 1; i <=20; i++) {
+            for (Flight flight : flights) {
+                flight.setIdleTime(flight.getIdleTime() + i);
+                double newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                if (newTotalValidation >= totalValidation) {
+                    flight.setIdleTime(flight.getIdleTime() - i + 1);
+                    newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if (newTotalValidation >= totalValidation) {
+                        flight.setIdleTime(flight.getIdleTime() + i);
+                    } else {
+                        System.out.println(newTotalValidation + "for Flight " + flight.getId());
+                    }
+                } else {
+                    System.out.println(newTotalValidation + "for Flight " + flight.getId());
+                }
+            }
+        }
 
     }
 }
