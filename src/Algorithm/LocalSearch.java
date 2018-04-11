@@ -35,6 +35,7 @@ public class LocalSearch {
                 }
             }
         }
+        //  System.out.println("First constraint has error: " + validation);
         return validation;
     }
 
@@ -49,6 +50,7 @@ public class LocalSearch {
                 }
             }
         }
+        //   System.out.println("Second constraint has error: " + validation);
         return validation;
 
     }
@@ -63,6 +65,7 @@ public class LocalSearch {
                 validation = validation + flight.getCruiseTimeLower() - flight.getCruiseTime();
             }
         }
+        //   System.out.println("Third constraint has error: " + validation);
         return validation;
     }
 
@@ -79,6 +82,7 @@ public class LocalSearch {
                 }
             }
         }
+        //   System.out.println("Fourth constraint has error: " + validation);
         return validation;
     }
 
@@ -92,6 +96,7 @@ public class LocalSearch {
                 validation = validation + flight.getDepTimeLower() - flight.getDepTimeInMin();
             }
         }
+        //  System.out.println("Fifth constraint has error: " + validation);
         return validation;
     }
 
@@ -106,10 +111,11 @@ public class LocalSearch {
                 validation = validation + flight.getArrTimeLower() - middlePart;
             }
         }
+        //  System.out.println("Sixth constraint has error: " + validation);
         return validation;
     }
 
-    //ограничение (11)
+    //ограничение (12)
     public double validateSeventhConstraint(ArrayList<Flight> flights) {
         double validation = 0;
         for (Flight flight : flights) {
@@ -117,6 +123,7 @@ public class LocalSearch {
                 validation = validation - flight.getIdleTime();
             }
         }
+        //   System.out.println("Seventh constraint has error: " + validation);
         return validation;
     }
 
@@ -133,13 +140,14 @@ public class LocalSearch {
         if (serviceLevel < serviceLevelBound) {
             validation = validation + serviceLevelBound - serviceLevel;
         }
+        //System.out.println("Eighth constraint has error: " + validation);
         return validation;
     }
 
     public void firstValidation(ArrayList<Flight> flights, ArrayList<Flight> conFlights) {
         double totalValidation = 0;
-        totalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
-        /*validation1 = validateFirstConstraint(conFlights);
+        // totalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+        validation1 = validateFirstConstraint(conFlights);
         validation2 = validateSecondConstraint(conFlights);
         validation3 = validateThirdConstraint(flights);
         validation4 = validateFourthConstraint(flights);
@@ -147,31 +155,318 @@ public class LocalSearch {
         validation6 = validateSixthConstraint(flights);
         validation7 = validateSeventhConstraint(flights);
         validation8 = validateEighthConstraint(conFlights);
-        */
+        System.out.println("First constraint has error: " + validation1);
+        System.out.println("Second constraint has error: " + validation2);
+        System.out.println("Third constraint has error: " + validation3);
+        System.out.println("Fourth constraint has error: " + validation4);
+        System.out.println("Fifth constraint has error: " + validation5);
+        System.out.println("Sixth constraint has error: " + validation6);
+        System.out.println("Seventh constraint has error: " + validation7);
+        System.out.println("Eighth constraint has error: " + validation8);
+        totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
+
         System.out.println(totalValidation);
         localSearchExecute(flights, totalValidation, conFlights);
 
     }
 
+    public void setNewIdleTime(int newIdleTime, Flight flight) {
+        ArrayList<Flight> flightsInPath = flight.getMainPath().getSetOfFlights();
+        int diff = newIdleTime - flight.getIdleTime();
+        flight.setIdleTime(newIdleTime);
+        for (Flight flightInPath : flightsInPath) {
+            if (flightInPath.getDepTimeInMin() > flight.getDepTimeInMin()) {
+                flightInPath.setDepTimeInMin(flightInPath.getDepTimeInMin() + diff);
+                flightInPath.setPlannedArrTimeInMin(flightInPath.getPlannedArrTimeInMin() + diff);
+                flightInPath.setActualArrTimeinMin(flightInPath.getActualArrTimeinMin() + diff);
+            }
+        }
+
+    }
+
+    public void setNewDepTime(int newDepTime, Flight flight) {
+        ArrayList<Flight> flightsInPath = flight.getMainPath().getSetOfFlights();
+        int diff = newDepTime - flight.getDepTimeInMin();
+        flight.setDepTimeInMin(newDepTime);
+        flight.setPlannedArrTimeInMin(flight.getPlannedArrTimeInMin() + diff);
+        flight.setActualArrTimeinMin(flight.getActualArrTimeinMin() + diff);
+        for (Flight flightInPath : flightsInPath) {
+            if (flightInPath.getId() + 1 == flight.getId()) {
+                flightInPath.setIdleTime(flightInPath.getIdleTime() + diff);
+            }
+            if (flightInPath.getDepTimeInMin() > flight.getDepTimeInMin()) {
+                flightInPath.setDepTimeInMin(flightInPath.getDepTimeInMin() + diff);
+                flightInPath.setPlannedArrTimeInMin(flightInPath.getPlannedArrTimeInMin() + diff);
+                flightInPath.setActualArrTimeinMin(flightInPath.getActualArrTimeinMin() + diff);
+            }
+        }
+    }
+
+    public void setNewCruiseTime(int newCruiseTime, Flight flight) {
+        ArrayList<Flight> flightsInPath = flight.getMainPath().getSetOfFlights();
+        int diff = newCruiseTime - flight.getCruiseTime();
+        flight.setIdleTime(flight.getIdleTime() - diff);
+        flight.setCruiseTime(newCruiseTime);
+        flight.setPlannedArrTimeInMin(flight.getPlannedArrTimeInMin() + diff);
+        flight.setActualArrTimeinMin(flight.getActualArrTimeinMin() + diff);
+    }
+
+    public void setNewServiceLevel(double newServiceLevel, Flight flight, Flight nextFlight) {
+        flight.getServiceLevel().put(nextFlight.getId(), newServiceLevel);
+    }
+
+    public void helpThirdConstraint(ArrayList<Flight> flights){
+        for (Flight flight : flights) {
+            if (flight.getCruiseTime() > flight.getCruiseTimeUpper()) {
+                setNewCruiseTime(flight.getCruiseTimeUpper(), flight);
+            } else if (flight.getCruiseTime() < flight.getCruiseTimeLower()) {
+                setNewCruiseTime(flight.getCruiseTimeLower(), flight);
+            }
+        }
+    }
+
     public void localSearchExecute(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
-        //int i = 1;
-        for(int i = 1; i <=20; i++) {
+        /*for (int i = 1; i <= 50; i++) {
             for (Flight flight : flights) {
-                flight.setIdleTime(flight.getIdleTime() + i);
+                setNewIdleTime(flight.getIdleTime() + i, flight);
+                //setNewDepTime(flight.getDepTimeInMin() + i, flight);
                 double newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
                 if (newTotalValidation >= totalValidation) {
-                    flight.setIdleTime(flight.getIdleTime() - i + 1);
+                    setNewIdleTime(flight.getIdleTime() - i + 1, flight);
                     newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
                     if (newTotalValidation >= totalValidation) {
-                        flight.setIdleTime(flight.getIdleTime() + i);
+                        setNewIdleTime(flight.getIdleTime() + i, flight);
                     } else {
-                        System.out.println(newTotalValidation + "for Flight " + flight.getId());
+                        totalValidation = newTotalValidation;
+                        System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + i);
                     }
                 } else {
-                    System.out.println(newTotalValidation + "for Flight " + flight.getId());
+                    totalValidation = newTotalValidation;
+                    System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + i);
+                }
+            }
+        }*/
+
+        for (int i = 1; i <= 30; i++) {
+            for (Flight flight : flights) {
+                //setNewIdleTime(flight.getIdleTime() + i, flight);
+                setNewCruiseTime(flight.getCruiseTime() + i, flight);
+                double newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                if (newTotalValidation >= totalValidation) {
+                    setNewCruiseTime(flight.getCruiseTime() - i - i, flight);
+                    newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if (newTotalValidation >= totalValidation) {
+                        setNewCruiseTime(flight.getCruiseTime() + i, flight);
+                    } else {
+                        totalValidation = newTotalValidation;
+                        //  System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + i);
+                    }
+                } else {
+                    totalValidation = newTotalValidation;
+                    // System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + i);
                 }
             }
         }
+        validation1 = validateFirstConstraint(conFlights);
+        validation2 = validateSecondConstraint(conFlights);
+        validation3 = validateThirdConstraint(flights);
+        validation4 = validateFourthConstraint(flights);
+        validation5 = validateFifthConstraint(flights);
+        validation6 = validateSixthConstraint(flights);
+        validation7 = validateSeventhConstraint(flights);
+        validation8 = validateEighthConstraint(conFlights);
+        System.out.println("First constraint has error: " + validation1);
+        System.out.println("Second constraint has error: " + validation2);
+        System.out.println("Third constraint has error: " + validation3);
+        System.out.println("Fourth constraint has error: " + validation4);
+        System.out.println("Fifth constraint has error: " + validation5);
+        System.out.println("Sixth constraint has error: " + validation6);
+        System.out.println("Seventh constraint has error: " + validation7);
+        System.out.println("Eighth constraint has error: " + validation8);
+        totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
+        System.out.println(totalValidation);
+
+        for (double j = 0.02; j <= 0.49; j = j + 0.02) {
+            for (Flight flight : conFlights) {
+                ArrayList<Flight> p = flight.getPasConnected();
+                for (Flight flightInP : p) {
+                    setNewServiceLevel(flight.getServiceLevel().get(flightInP.getId()) + j, flight, flightInP);
+                    double newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if (newTotalValidation >= totalValidation) {
+                        // setNewServiceLevel(flight.getServiceLevel().get(flightInP.getId()) - j - j, flight, flightInP);
+                        // newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                        //if(newTotalValidation >= totalValidation){
+                        setNewServiceLevel(flight.getServiceLevel().get(flightInP.getId()) - j, flight, flightInP);
+                        // } else {
+                        //    totalValidation = newTotalValidation;
+                        //  System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + j);
+                        //  }
+                    } else {
+                        totalValidation = newTotalValidation;
+                        //  System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + j);
+                    }
+                }
+            }
+        }
+
+        validation1 = validateFirstConstraint(conFlights);
+        validation2 = validateSecondConstraint(conFlights);
+        validation3 = validateThirdConstraint(flights);
+        validation4 = validateFourthConstraint(flights);
+        validation5 = validateFifthConstraint(flights);
+        validation6 = validateSixthConstraint(flights);
+        validation7 = validateSeventhConstraint(flights);
+        validation8 = validateEighthConstraint(conFlights);
+        System.out.println("First constraint has error: " + validation1);
+        System.out.println("Second constraint has error: " + validation2);
+        System.out.println("Third constraint has error: " + validation3);
+        System.out.println("Fourth constraint has error: " + validation4);
+        System.out.println("Fifth constraint has error: " + validation5);
+        System.out.println("Sixth constraint has error: " + validation6);
+        System.out.println("Seventh constraint has error: " + validation7);
+        System.out.println("Eighth constraint has error: " + validation8);
+        totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
+        System.out.println(totalValidation);
+
+        for (int i = 1; i < 30; i++) {
+            for (Flight flight : flights) {
+                if (flight.getId() != 1) {
+                    setNewDepTime(flight.getDepTimeInMin() + i, flight);
+                    double newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if(newTotalValidation >= totalValidation){
+                        setNewDepTime(flight.getDepTimeInMin() - i - i, flight);
+                        newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                        if(newTotalValidation >= totalValidation){
+                            setNewDepTime(flight.getDepTimeInMin() + i, flight);
+                        } else{
+                            totalValidation = newTotalValidation;
+                        }
+                    } else {
+                        totalValidation = newTotalValidation;
+                    }
+                }
+            }
+        }
+
+        validation1 = validateFirstConstraint(conFlights);
+        validation2 = validateSecondConstraint(conFlights);
+        validation3 = validateThirdConstraint(flights);
+        validation4 = validateFourthConstraint(flights);
+        validation5 = validateFifthConstraint(flights);
+        validation6 = validateSixthConstraint(flights);
+        validation7 = validateSeventhConstraint(flights);
+        validation8 = validateEighthConstraint(conFlights);
+        System.out.println("First constraint has error: " + validation1);
+        System.out.println("Second constraint has error: " + validation2);
+        System.out.println("Third constraint has error: " + validation3);
+        System.out.println("Fourth constraint has error: " + validation4);
+        System.out.println("Fifth constraint has error: " + validation5);
+        System.out.println("Sixth constraint has error: " + validation6);
+        System.out.println("Seventh constraint has error: " + validation7);
+        System.out.println("Eighth constraint has error: " + validation8);
+        totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
+        System.out.println(totalValidation);
+
+        helpThirdConstraint(flights);
+
+        validation1 = validateFirstConstraint(conFlights);
+        validation2 = validateSecondConstraint(conFlights);
+        validation3 = validateThirdConstraint(flights);
+        validation4 = validateFourthConstraint(flights);
+        validation5 = validateFifthConstraint(flights);
+        validation6 = validateSixthConstraint(flights);
+        validation7 = validateSeventhConstraint(flights);
+        validation8 = validateEighthConstraint(conFlights);
+        System.out.println("First constraint has error: " + validation1);
+        System.out.println("Second constraint has error: " + validation2);
+        System.out.println("Third constraint has error: " + validation3);
+        System.out.println("Fourth constraint has error: " + validation4);
+        System.out.println("Fifth constraint has error: " + validation5);
+        System.out.println("Sixth constraint has error: " + validation6);
+        System.out.println("Seventh constraint has error: " + validation7);
+        System.out.println("Eighth constraint has error: " + validation8);
+        totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
+        System.out.println(totalValidation);
+
+        for (double j = 0.02; j <= 0.49; j = j + 0.02) {
+            for (Flight flight : conFlights) {
+                ArrayList<Flight> p = flight.getPasConnected();
+                for (Flight flightInP : p) {
+                    setNewServiceLevel(flight.getServiceLevel().get(flightInP.getId()) + j, flight, flightInP);
+                    double newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if (newTotalValidation >= totalValidation) {
+                        // setNewServiceLevel(flight.getServiceLevel().get(flightInP.getId()) - j - j, flight, flightInP);
+                        // newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                        //if(newTotalValidation >= totalValidation){
+                        setNewServiceLevel(flight.getServiceLevel().get(flightInP.getId()) - j, flight, flightInP);
+                        // } else {
+                        //    totalValidation = newTotalValidation;
+                        //  System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + j);
+                        //  }
+                    } else {
+                        totalValidation = newTotalValidation;
+                        //  System.out.println(newTotalValidation + "for Flight " + flight.getId() + " for I= " + j);
+                    }
+                }
+            }
+        }
+        validation1 = validateFirstConstraint(conFlights);
+        validation2 = validateSecondConstraint(conFlights);
+        validation3 = validateThirdConstraint(flights);
+        validation4 = validateFourthConstraint(flights);
+        validation5 = validateFifthConstraint(flights);
+        validation6 = validateSixthConstraint(flights);
+        validation7 = validateSeventhConstraint(flights);
+        validation8 = validateEighthConstraint(conFlights);
+        System.out.println("First constraint has error: " + validation1);
+        System.out.println("Second constraint has error: " + validation2);
+        System.out.println("Third constraint has error: " + validation3);
+        System.out.println("Fourth constraint has error: " + validation4);
+        System.out.println("Fifth constraint has error: " + validation5);
+        System.out.println("Sixth constraint has error: " + validation6);
+        System.out.println("Seventh constraint has error: " + validation7);
+        System.out.println("Eighth constraint has error: " + validation8);
+        totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
+        System.out.println(totalValidation);
+
+        for (int i = 1; i < 30; i++) {
+            for (Flight flight : flights) {
+                if (flight.getId() != 1) {
+                    setNewDepTime(flight.getDepTimeInMin() + i, flight);
+                    double newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if(newTotalValidation >= totalValidation){
+                        setNewDepTime(flight.getDepTimeInMin() - i - i, flight);
+                        newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                        if(newTotalValidation >= totalValidation){
+                            setNewDepTime(flight.getDepTimeInMin() + i, flight);
+                        } else{
+                            totalValidation = newTotalValidation;
+                        }
+                    } else {
+                        totalValidation = newTotalValidation;
+                    }
+                }
+            }
+        }
+
+        validation1 = validateFirstConstraint(conFlights);
+        validation2 = validateSecondConstraint(conFlights);
+        validation3 = validateThirdConstraint(flights);
+        validation4 = validateFourthConstraint(flights);
+        validation5 = validateFifthConstraint(flights);
+        validation6 = validateSixthConstraint(flights);
+        validation7 = validateSeventhConstraint(flights);
+        validation8 = validateEighthConstraint(conFlights);
+        System.out.println("First constraint has error: " + validation1);
+        System.out.println("Second constraint has error: " + validation2);
+        System.out.println("Third constraint has error: " + validation3);
+        System.out.println("Fourth constraint has error: " + validation4);
+        System.out.println("Fifth constraint has error: " + validation5);
+        System.out.println("Sixth constraint has error: " + validation6);
+        System.out.println("Seventh constraint has error: " + validation7);
+        System.out.println("Eighth constraint has error: " + validation8);
+        totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
+        System.out.println(totalValidation);
 
     }
 }

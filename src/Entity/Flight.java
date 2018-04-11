@@ -23,7 +23,7 @@ public class Flight {
     public Airport destinationAirport; //в конструкторе
     public double congestionOrigin; //в конструкторе
     public double congestionDestination; //в конструкторе
-    public HashMap<Integer, Integer> turnTime = new HashMap<>(); //заполняется после заполнения листа p
+    public HashMap<Integer, Integer> turnTime = new HashMap<>(); //заполняется после заполнения листа p(pasConnected)
     public HashMap<Integer, Double> serviceLevel = new HashMap<>(); //считается после заполенения turnTime;
     //time window for departure time
     public int depTimeLower; //в конструкторе
@@ -265,15 +265,7 @@ public class Flight {
         return arrTimeLower;
     }
 
-    public void setArrTimeLower(int arrTimeLower) {
-        this.arrTimeLower = arrTimeLower;
-    }
-
     public int getArrTimeUpper() {
         return arrTimeUpper;
-    }
-
-    public void setArrTimeUpper(int arrTimeUpper) {
-        this.arrTimeUpper = arrTimeUpper;
     }
 }
