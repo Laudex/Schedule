@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5d9a9b99-505d-4232-8cf2-a4c964cb066f" name="Default" comment="added all flights">
       <change beforePath="$PROJECT_DIR$/src/Algorithm/LocalSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Algorithm/LocalSearch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Flight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Factory/FlightFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Factory/FlightFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,8 +29,8 @@
       <file leaf-file-name="LocalSearch.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Algorithm/LocalSearch.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="236" column="8" selection-start-line="236" selection-start-column="8" selection-end-line="236" selection-end-column="8" />
+            <state relative-caret-position="226">
+              <caret line="395" column="14" selection-start-line="395" selection-start-column="14" selection-end-line="395" selection-end-column="14" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -742,12 +739,12 @@
       <updated>1522059015674</updated>
       <workItem from="1522059018586" duration="8098000" />
       <workItem from="1522396780276" duration="16233000" />
-      <workItem from="1522761383652" duration="41035000" />
+      <workItem from="1522761383652" duration="41657000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65366000" />
+    <option name="totallyTimeSpent" value="65988000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1073,8 +1070,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Algorithm/LocalSearch.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="236" column="8" selection-start-line="236" selection-start-column="8" selection-end-line="236" selection-end-column="8" />
+        <state relative-caret-position="226">
+          <caret line="395" column="14" selection-start-line="395" selection-start-column="14" selection-end-line="395" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

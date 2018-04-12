@@ -224,7 +224,7 @@ public class LocalSearch {
         flight.getServiceLevel().put(nextFlight.getId(), newServiceLevel);
     }
 
-    public void helpThirdConstraint(ArrayList<Flight> flights){
+    public void helpThirdConstraint(ArrayList<Flight> flights) {
         for (Flight flight : flights) {
             if (flight.getCruiseTime() > flight.getCruiseTimeUpper()) {
                 setNewCruiseTime(flight.getCruiseTimeUpper(), flight);
@@ -233,26 +233,27 @@ public class LocalSearch {
             }
         }
     }
-    public void helpEighthConstraint(ArrayList<Flight> flights, ArrayList<Flight> conFlights){
-        
+
+    public void helpEighthConstraint(ArrayList<Flight> flights, ArrayList<Flight> conFlights) {
+
     }
 
-    public double searchWithinCruiseTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights){
+    public double searchWithinCruiseTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
         double newTotalValidation = 0;
-        for(Flight flight : flights){
+        for (Flight flight : flights) {
             boolean atLeastOneBetter = false;
             int currentBetterCruiseTime = 0;
             int currentCruiseTime = flight.getCruiseTime();
-            for(int i = flight.getCruiseTimeLower(); i <= flight.getCruiseTimeUpper(); i++){
+            for (int i = flight.getCruiseTimeLower(); i <= flight.getCruiseTimeUpper(); i++) {
                 setNewCruiseTime(i, flight);
                 newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
-                if (newTotalValidation < totalValidation){
+                if (newTotalValidation < totalValidation) {
                     currentBetterCruiseTime = i;
                     atLeastOneBetter = true;
                     totalValidation = newTotalValidation;
                 }
             }
-            if (!atLeastOneBetter){
+            if (!atLeastOneBetter) {
                 setNewCruiseTime(currentCruiseTime, flight);
             } else {
                 setNewCruiseTime(currentBetterCruiseTime, flight);
@@ -261,10 +262,10 @@ public class LocalSearch {
         return totalValidation;
     }
 
-    public double searchWithinDepTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights){
+    public double searchWithinDepTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
         double newTotalValidation = 0;
-        for(Flight flight : flights){
-            if(!flight.isFirstInPath()) {
+        for (Flight flight : flights) {
+            if (!flight.isFirstInPath()) {
                 boolean atLeastOneBetter = false;
                 int currentBetterDepTime = 0;
                 int currentDepTime = flight.getDepTimeInMin();
@@ -287,22 +288,22 @@ public class LocalSearch {
         return totalValidation;
     }
 
-    public double searchWithinIdleTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights){
+    public double searchWithinIdleTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
         double newTotalValidation = 0;
-        for(Flight flight : flights){
+        for (Flight flight : flights) {
             boolean atLeastOneBetter = false;
             int currentBetterIdleTime = 0;
             int currentIdleTime = flight.getIdleTime();
-            for(int i = 0; i <= 50; i++){
+            for (int i = 0; i <= 50; i++) {
                 setNewIdleTime(i, flight);
                 newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
-                if (newTotalValidation < totalValidation){
+                if (newTotalValidation < totalValidation) {
                     currentBetterIdleTime = i;
                     atLeastOneBetter = true;
                     totalValidation = newTotalValidation;
                 }
             }
-            if (!atLeastOneBetter){
+            if (!atLeastOneBetter) {
                 setNewIdleTime(currentIdleTime, flight);
             } else {
                 setNewIdleTime(currentBetterIdleTime, flight);
@@ -311,9 +312,9 @@ public class LocalSearch {
         return totalValidation;
     }
 
-    public double searchWithinServiceLevel(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights){
+    public double searchWithinServiceLevel(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
         double newTotalValidation = 0;
-        for(Flight flight : conFlights) {
+        for (Flight flight : conFlights) {
             ArrayList<Flight> p = flight.getPasConnected();
             for (Flight pFlight : p) {
                 boolean atLeastOneBetter = false;
@@ -338,18 +339,39 @@ public class LocalSearch {
         return totalValidation;
     }
 
-    public void writeToFile(ArrayList<Flight> flights, ArrayList<Flight> conFlights){
+    public double searchWithinServiceLevelUpdate(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
+        double newTotalValidation;
+        for (double i = 0.5; i < 1; i = i + 0.001) {
+            for (Flight flight : conFlights) {
+                ArrayList<Flight> p = flight.getPasConnected();
+                for (Flight pFlight : p) {
+                    double currentServiceLevel = flight.getServiceLevel().get(pFlight.getId());
+                    setNewServiceLevel(i, flight, pFlight);
+                    newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if (newTotalValidation < totalValidation) {
+                        totalValidation = newTotalValidation;
+                    } else {
+                        setNewServiceLevel(currentServiceLevel, flight, pFlight);
+                    }
+                }
+            }
+
+        }
+        return totalValidation;
+    }
+
+    public void writeToFile(ArrayList<Flight> flights, ArrayList<Flight> conFlights) {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter("results.txt", "UTF-8");
             writer.write("id   Departure Time   Planned Arr Time   Actual Arr Time     Cruise Time   Origin Airport   Destination Airport\n");
-            for(Flight flight : flights){
+            for (Flight flight : flights) {
                 writer.write(flight.toFile());
                 writer.write("\n");
             }
-            for(Flight flight : conFlights){
+            for (Flight flight : conFlights) {
                 ArrayList<Flight> p = flight.getPasConnected();
-                for(Flight flightInP : p){
+                for (Flight flightInP : p) {
                     writer.write("Flight " + flight.getId() + " connects with flight " + flightInP.getId() + " with Service Level " + flight.getServiceLevel().get(flightInP.getId()));
                     writer.write("\n");
                 }
@@ -363,21 +385,23 @@ public class LocalSearch {
         writer.close();
     }
 
-    public void localSearchExecute(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
-        for(int i = 1; i <= 200; i++){
-            totalValidation = searchWithinServiceLevel(flights,totalValidation, conFlights);
-            totalValidation = searchWithinDepTime(flights,totalValidation, conFlights);
+    public void localSearchExecute(ArrayList<Flight> flights, double totalValidation, ArrayList<
+            Flight> conFlights) {
+        for (int i = 1; i <= 200; i++) {
+            //totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
+            totalValidation = searchWithinServiceLevelUpdate(flights, totalValidation, conFlights);
+            totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
             totalValidation = searchWithinIdleTime(flights, totalValidation, conFlights);
             totalValidation = searchWithinCruiseTime(flights, totalValidation, conFlights);
-            totalValidation = searchWithinServiceLevel(flights,totalValidation, conFlights);
-            totalValidation = searchWithinDepTime(flights,totalValidation, conFlights);
-            if(totalValidation <= 0.01){
+            totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
+           // totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
+            if (totalValidation <= 0.01) {
                 System.out.println("Iteration: " + i);
                 writeToFile(flights, conFlights);
                 break;
             }
         }
-       // System.out.println(totalValidation);
+        // System.out.println(totalValidation);
 
         validation1 = validateFirstConstraint(conFlights);
         validation2 = validateSecondConstraint(conFlights);
@@ -460,7 +484,6 @@ public class LocalSearch {
         totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
         System.out.println(totalValidation);
         */
-
 
 
     }
