@@ -15,8 +15,8 @@ public class FlightFactory {
     public FlightFactory() {
     }
 
-    public Flight buildFlight(int id, int depTimeInMin, int plannedArrTimeInMin, Path mainPath, Airport originAirport, Airport destinationAirport) {
-        Flight flight = new Flight(id, depTimeInMin, plannedArrTimeInMin, mainPath, originAirport, destinationAirport);
+    public Flight buildFlight(int id, int depTimeInMin, int plannedArrTimeInMin, Path mainPath, Airport originAirport, Airport destinationAirport, boolean firstInPath) {
+        Flight flight = new Flight(id, depTimeInMin, plannedArrTimeInMin, mainPath, originAirport, destinationAirport, firstInPath);
         flight.setTurnAroundTime(mainPath.getAssignedAircraftType().getBaseTurnTime());
         flight.setActualNonCruiseTime(scaleParameter, tailParameter);
         flight.setDemand();

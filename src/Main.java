@@ -51,11 +51,11 @@ public class Main {
 
         FlightFactory flightFactory = new FlightFactory();
 
-        Flight f2303 = flightFactory.buildFlight(1, 25, 180, path1, airportMap.get("ORD"), airportMap.get("DFW"));
-        Flight f2336 = flightFactory.buildFlight(2, 230, 380, path1, airportMap.get("DFW"), airportMap.get("ORD"));
-        Flight f1053 = flightFactory.buildFlight(3, 425, 595, path1, airportMap.get("ORD"), airportMap.get("AUS"));
-        Flight f336 = flightFactory.buildFlight(4, 640, 805, path1, airportMap.get("AUS"), airportMap.get("ORD"));
-        Flight f336sec = flightFactory.buildFlight(5, 860, 994, path1, airportMap.get("ORD"), airportMap.get("LGA"));
+        Flight f2303 = flightFactory.buildFlight(1, 25, 180, path1, airportMap.get("ORD"), airportMap.get("DFW"), true);
+        Flight f2336 = flightFactory.buildFlight(2, 230, 380, path1, airportMap.get("DFW"), airportMap.get("ORD"),false);
+        Flight f1053 = flightFactory.buildFlight(3, 425, 595, path1, airportMap.get("ORD"), airportMap.get("AUS"),false);
+        Flight f336 = flightFactory.buildFlight(4, 640, 805, path1, airportMap.get("AUS"), airportMap.get("ORD"),false);
+        Flight f336sec = flightFactory.buildFlight(5, 860, 994, path1, airportMap.get("ORD"), airportMap.get("LGA"),false);
         path1.setSetOfFlights(f2303, f2336, f1053, f336, f336sec);
         flightFactory.setIdleTime(f2303, f2336, f1053, f336, f336sec);
 
@@ -66,9 +66,9 @@ public class Main {
         flights.add(f336sec);
 
         Path path2 = new Path(2,b767300);
-        Flight f1341 = flightFactory.buildFlight(6, 150, 385, path2, airportMap.get("ORD"), airportMap.get("SFO"));
-        Flight f348 = flightFactory.buildFlight(7, 430, 695, path2, airportMap.get("SFO"), airportMap.get("ORD"));
-        Flight f1521 = flightFactory.buildFlight(8, 775,1010, path2, airportMap.get("ORD"), airportMap.get("TUS"));
+        Flight f1341 = flightFactory.buildFlight(6, 150, 385, path2, airportMap.get("ORD"), airportMap.get("SFO"), true);
+        Flight f348 = flightFactory.buildFlight(7, 430, 695, path2, airportMap.get("SFO"), airportMap.get("ORD"),false);
+        Flight f1521 = flightFactory.buildFlight(8, 775,1010, path2, airportMap.get("ORD"), airportMap.get("TUS"),false);
         path2.setSetOfFlights(f1341,f348,f1521);
         flightFactory.setIdleTime(f1341, f348, f1521);
 
@@ -78,11 +78,11 @@ public class Main {
 
         Path path3 = new Path(3, a320212);
 
-        Flight f407 = flightFactory.buildFlight(9, 0,70, path3, airportMap.get("ORD"), airportMap.get("STL"));
-        Flight f755 = flightFactory.buildFlight(10, 135,210, path3, airportMap.get("STL"), airportMap.get("ORD"));
-        Flight f755sec = flightFactory.buildFlight(11, 265,445, path3, airportMap.get("ORD"), airportMap.get("SAT"));
-        Flight f408 = flightFactory.buildFlight(12,490,650, path3, airportMap.get("SAT"), airportMap.get("ORD"));
-        Flight f408sec = flightFactory.buildFlight(13,705,830, path3, airportMap.get("ORD"), airportMap.get("PHL"));
+        Flight f407 = flightFactory.buildFlight(9, 0,70, path3, airportMap.get("ORD"), airportMap.get("STL"), true);
+        Flight f755 = flightFactory.buildFlight(10, 135,210, path3, airportMap.get("STL"), airportMap.get("ORD"),false);
+        Flight f755sec = flightFactory.buildFlight(11, 265,445, path3, airportMap.get("ORD"), airportMap.get("SAT"),false);
+        Flight f408 = flightFactory.buildFlight(12,490,650, path3, airportMap.get("SAT"), airportMap.get("ORD"),false);
+        Flight f408sec = flightFactory.buildFlight(13,705,830, path3, airportMap.get("ORD"), airportMap.get("PHL"),false);
         path3.setSetOfFlights(f407,f755,f755sec,f408,f408sec);
         flightFactory.setIdleTime(f407,f755,f755sec,f408,f408sec);
 
@@ -94,10 +94,10 @@ public class Main {
 
         Path path4 = new Path(4,a320111);
 
-        Flight f876 = flightFactory.buildFlight(14,15,145, path4, airportMap.get("ORD"), airportMap.get("BOS"));
-        Flight f413 = flightFactory.buildFlight(15,195,380, path4, airportMap.get("BOS"), airportMap.get("ORD"));
-        Flight f413sec = flightFactory.buildFlight(16,445,720, path4, airportMap.get("ORD"), airportMap.get("SNA"));
-        Flight f1262 = flightFactory.buildFlight(17, 770, 1000, path4, airportMap.get("SNA"), airportMap.get("ORD"));
+        Flight f876 = flightFactory.buildFlight(14,15,145, path4, airportMap.get("ORD"), airportMap.get("BOS"), true);
+        Flight f413 = flightFactory.buildFlight(15,195,380, path4, airportMap.get("BOS"), airportMap.get("ORD"),false);
+        Flight f413sec = flightFactory.buildFlight(16,445,720, path4, airportMap.get("ORD"), airportMap.get("SNA"),false);
+        Flight f1262 = flightFactory.buildFlight(17, 770, 1000, path4, airportMap.get("SNA"), airportMap.get("ORD"),false);
         path4.setSetOfFlights(f876, f413, f413sec, f1262);
         flightFactory.setIdleTime(f876, f413, f413sec, f1262);
 
@@ -108,8 +108,8 @@ public class Main {
 
         Path path5 = new Path(5,a320212);
 
-        Flight f451 = flightFactory.buildFlight(18, 205,500, path5, airportMap.get("ORD"), airportMap.get("SFO"));
-        Flight f554 = flightFactory.buildFlight(19, 565, 830, path5, airportMap.get("SFO"), airportMap.get("ORD"));
+        Flight f451 = flightFactory.buildFlight(18, 205,500, path5, airportMap.get("ORD"), airportMap.get("SFO"), true);
+        Flight f554 = flightFactory.buildFlight(19, 565, 830, path5, airportMap.get("SFO"), airportMap.get("ORD"),false);
         path5.setSetOfFlights(f451, f554);
         flightFactory.setIdleTime(f451, f554);
 
@@ -118,10 +118,10 @@ public class Main {
 
         Path path6 = new Path(6, a320111);
 
-        Flight f496 = flightFactory.buildFlight(20, 25,125, path6, airportMap.get("ORD"), airportMap.get("DCA"));
-        Flight f1715 = flightFactory.buildFlight(21, 175, 305, path6, airportMap.get("DCA"), airportMap.get("ORD"));
-        Flight f1715sec = flightFactory.buildFlight(22, 365, 610, path6, airportMap.get("ORD"), airportMap.get("LAS"));
-        Flight f1708 = flightFactory.buildFlight(23, 660, 880, path6, airportMap.get("LAS"), airportMap.get("ORD"));
+        Flight f496 = flightFactory.buildFlight(20, 25,125, path6, airportMap.get("ORD"), airportMap.get("DCA"), true);
+        Flight f1715 = flightFactory.buildFlight(21, 175, 305, path6, airportMap.get("DCA"), airportMap.get("ORD"),false);
+        Flight f1715sec = flightFactory.buildFlight(22, 365, 610, path6, airportMap.get("ORD"), airportMap.get("LAS"), false);
+        Flight f1708 = flightFactory.buildFlight(23, 660, 880, path6, airportMap.get("LAS"), airportMap.get("ORD"), false);
         path6.setSetOfFlights(f496, f1715, f1715sec, f1708);
         flightFactory.setIdleTime(f496, f1715, f1715sec, f1708);
 
@@ -132,9 +132,9 @@ public class Main {
 
         Path path7 = new Path(7, b767300);
 
-        Flight f1425 = flightFactory.buildFlight(24, 125,405, path7, airportMap.get("ORD"), airportMap.get("SNA"));
-        Flight f556 = flightFactory.buildFlight(25, 460, 600, path7, airportMap.get("SNA"), airportMap.get("ORD"));
-        Flight f1940 = flightFactory.buildFlight(26, 785,965, path7, airportMap.get("ORD"), airportMap.get("MIA"));
+        Flight f1425 = flightFactory.buildFlight(24, 125,405, path7, airportMap.get("ORD"), airportMap.get("SNA"), true);
+        Flight f556 = flightFactory.buildFlight(25, 460, 600, path7, airportMap.get("SNA"), airportMap.get("ORD"), false);
+        Flight f1940 = flightFactory.buildFlight(26, 785,965, path7, airportMap.get("ORD"), airportMap.get("MIA"),false);
         path7.setSetOfFlights(f1425,f556,f1940);
         flightFactory.setIdleTime(f1425,f556,f1940);
 
@@ -144,10 +144,10 @@ public class Main {
 
         Path path8 = new Path(8, b767300);
 
-        Flight f2460 = flightFactory.buildFlight(27,25, 190, path8, airportMap.get("ORD"), airportMap.get("RSW"));
-        Flight f564 = flightFactory.buildFlight(28, 240,425, path8, airportMap.get("RSW"), airportMap.get("ORD"));
-        Flight f1446 = flightFactory.buildFlight(29, 515, 680, path8, airportMap.get("ORD"), airportMap.get("EWR"));
-        Flight f1411 = flightFactory.buildFlight(30, 745, 910, path8, airportMap.get("EWR"), airportMap.get("ORD"));
+        Flight f2460 = flightFactory.buildFlight(27,25, 190, path8, airportMap.get("ORD"), airportMap.get("RSW"), true);
+        Flight f564 = flightFactory.buildFlight(28, 240,425, path8, airportMap.get("RSW"), airportMap.get("ORD"), false);
+        Flight f1446 = flightFactory.buildFlight(29, 515, 680, path8, airportMap.get("ORD"), airportMap.get("EWR"), false);
+        Flight f1411 = flightFactory.buildFlight(30, 745, 910, path8, airportMap.get("EWR"), airportMap.get("ORD"), false);
         path8.setSetOfFlights(f2460,f564,f1446,f1411);
         flightFactory.setIdleTime(f2460,f564,f1446,f1411);
 
@@ -158,9 +158,9 @@ public class Main {
 
         Path path9 = new Path(9, a320111);
 
-        Flight f1021 = flightFactory.buildFlight(31, 130,375, path9, airportMap.get("ORD"), airportMap.get("LAS"));
-        Flight f1544 = flightFactory.buildFlight(32, 425, 645, path9, airportMap.get("LAS"), airportMap.get("ORD"));
-        Flight f1544sec = flightFactory.buildFlight(33, 700, 800, path9, airportMap.get("ORD"), airportMap.get("DCA"));
+        Flight f1021 = flightFactory.buildFlight(31, 130,375, path9, airportMap.get("ORD"), airportMap.get("LAS"), true);
+        Flight f1544 = flightFactory.buildFlight(32, 425, 645, path9, airportMap.get("LAS"), airportMap.get("ORD"), false);
+        Flight f1544sec = flightFactory.buildFlight(33, 700, 800, path9, airportMap.get("ORD"), airportMap.get("DCA"), false);
         path9.setSetOfFlights(f1021, f1544, f1544sec);
         flightFactory.setIdleTime(f1021, f1544, f1544sec);
 
@@ -170,10 +170,10 @@ public class Main {
 
         Path path10 = new Path(10, a320212);
 
-        Flight f1823 = flightFactory.buildFlight(34, 180, 355, path10, airportMap.get("ORD"), airportMap.get("PBI"));
-        Flight f2067 = flightFactory.buildFlight(35, 400, 600, path10, airportMap.get("PBI"), airportMap.get("ORD"));
-        Flight f2067sec = flightFactory.buildFlight(36, 655, 725, path10, airportMap.get("ORD"), airportMap.get("STL"));
-        Flight f1186 = flightFactory.buildFlight(37, 770, 845, path10, airportMap.get("STL"), airportMap.get("ORD"));
+        Flight f1823 = flightFactory.buildFlight(34, 180, 355, path10, airportMap.get("ORD"), airportMap.get("PBI"), true);
+        Flight f2067 = flightFactory.buildFlight(35, 400, 600, path10, airportMap.get("PBI"), airportMap.get("ORD"), false);
+        Flight f2067sec = flightFactory.buildFlight(36, 655, 725, path10, airportMap.get("ORD"), airportMap.get("STL"), false);
+        Flight f1186 = flightFactory.buildFlight(37, 770, 845, path10, airportMap.get("STL"), airportMap.get("ORD"), false);
         path10.setSetOfFlights(f1823,f2067, f2067sec, f1186);
         flightFactory.setIdleTime(f1823,f2067, f2067sec, f1186);
 
@@ -184,8 +184,8 @@ public class Main {
 
         Path path11 = new Path(11, a320111);
 
-        Flight f2363 = flightFactory.buildFlight(38, 210, 380, path11, airportMap.get("ORD"), airportMap.get("HDN"));
-        Flight f2318 = flightFactory.buildFlight(39, 440, 610, path11, airportMap.get("HDN"), airportMap.get("ORD"));
+        Flight f2363 = flightFactory.buildFlight(38, 210, 380, path11, airportMap.get("ORD"), airportMap.get("HDN"), true);
+        Flight f2318 = flightFactory.buildFlight(39, 440, 610, path11, airportMap.get("HDN"), airportMap.get("ORD"), false);
         path11.setSetOfFlights(f2363, f2318);
         flightFactory.setIdleTime(f2363, f2318);
 
@@ -194,8 +194,8 @@ public class Main {
 
         Path path12 = new Path(12, a320212);
 
-        Flight f2345 = flightFactory.buildFlight(40, 655, 810, path12, airportMap.get("ORD"), airportMap.get("DFW"));
-        Flight f2374 = flightFactory.buildFlight(41, 860, 1000, path12, airportMap.get("DFW"), airportMap.get("ORD"));
+        Flight f2345 = flightFactory.buildFlight(40, 655, 810, path12, airportMap.get("ORD"), airportMap.get("DFW"),true);
+        Flight f2374 = flightFactory.buildFlight(41, 860, 1000, path12, airportMap.get("DFW"), airportMap.get("ORD"), false);
         path12.setSetOfFlights(f2345, f2374);
         flightFactory.setIdleTime(f2345, f2374);
 

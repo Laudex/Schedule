@@ -33,15 +33,16 @@ public class Flight {
     public int demand; // в setDemand
     public int turnAroundTime; //в setTurnAroundTime
     public HashMap<Integer, Double> weights = new HashMap<>();
+    public boolean firstInPath; //в конструкторе
 
-    public Flight(int id, int depTimeInMin, int plannedArrTimeInMin, Path mainPath, Airport originAirport, Airport destinationAirport) {
+    public Flight(int id, int depTimeInMin, int plannedArrTimeInMin, Path mainPath, Airport originAirport, Airport destinationAirport, boolean firstInPath) {
         this.id = id;
         this.depTimeInMin = depTimeInMin;
-        this.depTimeLower = depTimeInMin - 30;
-        this.depTimeUpper = depTimeInMin + 30;
+        this.depTimeLower = depTimeInMin - 40;
+        this.depTimeUpper = depTimeInMin + 40;
         this.plannedArrTimeInMin = plannedArrTimeInMin;
-        this.arrTimeLower = plannedArrTimeInMin - 30;
-        this.arrTimeUpper = plannedArrTimeInMin + 30;
+        this.arrTimeLower = plannedArrTimeInMin - 40;
+        this.arrTimeUpper = plannedArrTimeInMin + 40;
         this.cruiseTime = plannedArrTimeInMin - depTimeInMin - 20;
         this.mainPath = mainPath;
         this.cruiseLenght = mainPath.getAssignedAircraftType().getMRCSpeed() * cruiseTime;
@@ -49,6 +50,7 @@ public class Flight {
         this.destinationAirport = destinationAirport;
         this.congestionOrigin = originAirport.getCongestion();
         this.congestionDestination = destinationAirport.getCongestion();
+        this.firstInPath = firstInPath;
     }
 
     public int getId() {
@@ -267,5 +269,15 @@ public class Flight {
 
     public int getArrTimeUpper() {
         return arrTimeUpper;
+    }
+
+
+    public String toFile(){
+        StringBuilder flight = new StringBuilder(id + " " + depTimeInMin + " " + plannedArrTimeInMin + " " + actualArrTimeinMin + " " + cruiseTime + " " + originAirport.getName() + " " + destinationAirport.getName());
+        return flight.toString();
+    }
+
+    public boolean isFirstInPath() {
+        return firstInPath;
     }
 }
