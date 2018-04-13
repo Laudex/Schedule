@@ -7,6 +7,7 @@ import Factory.AirportFactory;
 import Factory.FlightFactory;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class Main {
 
     public static double numberOfTypes = 3;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         AirportFactory airportFactory = new AirportFactory();
         HashMap<String, Airport> airportMap = airportFactory.buildAirportMap();
 
@@ -239,7 +240,9 @@ public class Main {
         }*/
         flightFactory.setCruiseTimeBounds(flights);
         LocalSearch localSearch = new LocalSearch();
-        localSearch.firstValidation(flights, connectedFlights);
+        //localSearch.firstValidation(flights, connectedFlights);
+        Reader reader = new Reader();
+        reader.readFromExcel("C:\\Schedule\\AircraftType.xlsx");
 
 
 

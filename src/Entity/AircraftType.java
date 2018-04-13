@@ -18,6 +18,23 @@ public class AircraftType {
     public int lowBoundDemand;
     public int uppBoundDemand;
 
+    public AircraftType(int typeId, int capacity, int mass, double surface, double CD0, double CD2, double cf1, double cf2, double cfCR, double MRCSpeed, int baseTurnTime, int idleTimeCost, int lowBoundDemand, int uppBoundDemand) {
+        this.typeId = typeId;
+        this.capacity = capacity;
+        this.mass = mass;
+        this.surface = surface;
+        this.CD0 = CD0;
+        this.CD2 = CD2;
+        Cf1 = cf1;
+        Cf2 = cf2;
+        CfCR = cfCR;
+        this.MRCSpeed = MRCSpeed;
+        this.baseTurnTime = baseTurnTime;
+        this.idleTimeCost = idleTimeCost;
+        this.lowBoundDemand = lowBoundDemand;
+        this.uppBoundDemand = uppBoundDemand;
+    }
+
     public AircraftType(int typeId, int capacity, int mass, double surface, double CD0, double CD2, double cf1, double cf2, double cfCR, double MRCSpeed, int baseTurnTime, int idleTimeCost, int numberOfAircrafts, int lowBoundDemand, int uppBoundDemand) {
         this.typeId = typeId;
         this.capacity = capacity;
