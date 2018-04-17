@@ -24,7 +24,7 @@ public class Main {
     public static double connectedTimeInterval = 45;
     public static double density = 1.29;
     public static double gravAcc = 9.8;
-    public static double blank = 5;
+    public static double blank = 45;
 
     public static double numberOfTypes = 3;
 
@@ -240,9 +240,9 @@ public class Main {
         }*/
         flightFactory.setCruiseTimeBounds(flights);
         LocalSearch localSearch = new LocalSearch();
-        //localSearch.firstValidation(flights, connectedFlights);
-        Reader reader = new Reader();
-        reader.readFromExcel("C:\\Schedule\\AircraftType.xlsx");
+        localSearch.firstValidation(flights, connectedFlights);
+       // Reader reader = new Reader();
+       // reader.readFromExcel("C:\\Schedule\\AircraftType.xlsx");
 
 
 

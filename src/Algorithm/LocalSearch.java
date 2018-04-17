@@ -1,5 +1,6 @@
 package Algorithm;
 
+import Entity.AircraftType;
 import Entity.Flight;
 
 import java.io.FileNotFoundException;
@@ -14,6 +15,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LocalSearch {
+    public static double density = 1.29;
+    public static double gravAcc = 9.8;
+    public static double cosBlank = 0.53;
+    public static double cFuel = 0.6;
+    public static double cCarbon = 0.017;
+    public static double baseSpillCost = 15;
     public static double serviceLevelBound = 0.8;
     public static double minimumServiceLevelForEachFlight = 0.5;
     //e^a
@@ -235,6 +242,23 @@ public class LocalSearch {
     }
 
     public void helpEighthConstraint(ArrayList<Flight> flights, ArrayList<Flight> conFlights) {
+        double startTotalValidation = validateEighthConstraint(conFlights);
+        for (double i = 0.5; i < 1; i = i + 0.001) {
+            for (Flight flight : conFlights) {
+                ArrayList<Flight> p = flight.getPasConnected();
+                for (Flight pFlight : p) {
+                    double currentServiceLevel = flight.getServiceLevel().get(pFlight.getId());
+                    setNewServiceLevel(i, flight, pFlight);
+                    double newTotalValidation =  validateEighthConstraint(conFlights);
+                    if (newTotalValidation < startTotalValidation) {
+                        startTotalValidation = newTotalValidation;
+                    } else {
+                        setNewServiceLevel(currentServiceLevel, flight, pFlight);
+                    }
+                }
+            }
+
+        }
 
     }
 
@@ -360,7 +384,7 @@ public class LocalSearch {
         return totalValidation;
     }
 
-    public void writeToFile(ArrayList<Flight> flights, ArrayList<Flight> conFlights) {
+    public void writeToFile(ArrayList<Flight> flights, ArrayList<Flight> conFlights, double cost) {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter("results.txt", "UTF-8");
@@ -376,6 +400,7 @@ public class LocalSearch {
                     writer.write("\n");
                 }
             }
+            writer.write("Total cost = " + cost);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -385,6 +410,25 @@ public class LocalSearch {
         writer.close();
     }
 
+    public double costFunction(ArrayList<Flight> flights){
+        double cost = 0;
+        for(Flight flight : flights){
+            AircraftType currentType = flight.getMainPath().getAssignedAircraftType();
+            double c1 = 0.5 * currentType.getCf1() * currentType.getCfCR() * currentType.getCD0() * density * currentType.getSurface() * Math.pow(flight.getCruiseLenght(),2);
+            double c2 = 0.5 * currentType.getCf1() * currentType.getCfCR() * (currentType.getCD0() * density * currentType.getSurface() * Math.pow(flight.getCruiseLenght(), 3)) / currentType.getCf2();
+            double c3 = 0.5 * currentType.getCf1() * currentType.getCfCR() * (currentType.getCD2() * 4 * Math.pow(currentType.getMass(), 2) * Math.pow(gravAcc,2))/(density * currentType.getSurface() * Math.pow(cosBlank,2) * Math.pow(flight.getCruiseLenght(), 2));
+            double c4 = 0.5 * currentType.getCf1() * currentType.getCfCR() * (currentType.getCD2() * 4 * Math.pow(currentType.getMass(), 2) * Math.pow(gravAcc,2))/(currentType.getCf2() * density * currentType.getSurface() * Math.pow(cosBlank,2) * Math.pow(flight.getCruiseLenght(),2));
+            double F = c1 *1/flight.getCruiseTime() + c2 * 1/(Math.pow(flight.getCruiseTime(),2)) + c3 * Math.pow(flight.getCruiseTime(),3) + c4 * Math.pow(flight.getCruiseTime(),2);
+            double cFuelAndCarbonCost = (cFuel + 3.15 * cCarbon) * F;
+            double Csp = baseSpillCost * flight.getCongestionOrigin() * flight.getCongestionDestination();
+            double costOfSpilled = Csp * Math.max(flight.getDemand() - currentType.getCapacity(), 0);
+            double costOfIdleTIme = flight.getIdleTime() * currentType.getIdleTimeCost();
+            double totalCost = cFuelAndCarbonCost + costOfSpilled + costOfIdleTIme;
+            cost = cost + totalCost;
+        }
+        return cost;
+    }
+
     public void localSearchExecute(ArrayList<Flight> flights, double totalValidation, ArrayList<
             Flight> conFlights) {
         for (int i = 1; i <= 200; i++) {
@@ -392,12 +436,22 @@ public class LocalSearch {
             totalValidation = searchWithinServiceLevelUpdate(flights, totalValidation, conFlights);
             totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
             totalValidation = searchWithinIdleTime(flights, totalValidation, conFlights);
+
+            totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
             totalValidation = searchWithinCruiseTime(flights, totalValidation, conFlights);
             totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
-           // totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
+            totalValidation = searchWithinIdleTime(flights, totalValidation, conFlights);
+
+
+            totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
+            totalValidation = searchWithinServiceLevelUpdate(flights, totalValidation, conFlights);
+
             if (totalValidation <= 0.01) {
                 System.out.println("Iteration: " + i);
-                writeToFile(flights, conFlights);
+                double cost = costFunction(flights);
+                System.out.println("Cost: " + cost);
+                writeToFile(flights, conFlights, cost);
+
                 break;
             }
         }
