@@ -273,7 +273,7 @@ public class Flight {
 
 
     public String toFile(){
-        StringBuilder flight = new StringBuilder(id + " " + depTimeInMin + " " + plannedArrTimeInMin + " " + actualArrTimeinMin + " " + cruiseTime + " " + originAirport.getName() + " " + destinationAirport.getName());
+        StringBuilder flight = new StringBuilder(id + " " + depTimeInMin + " " + plannedArrTimeInMin + " " + actualArrTimeinMin + " " + cruiseTime + " " + originAirport.getName() + " " + destinationAirport.getName() + " " +mainPath.getAssignedAircraftType().getTypeId());
         return flight.toString();
     }
 

@@ -240,7 +240,7 @@ public class Main {
         }*/
         flightFactory.setCruiseTimeBounds(flights);
         LocalSearch localSearch = new LocalSearch();
-        localSearch.firstValidation(flights, connectedFlights);
+        localSearch.firstValidation(flights, connectedFlights, paths);
        // Reader reader = new Reader();
        // reader.readFromExcel("C:\\Schedule\\AircraftType.xlsx");
 

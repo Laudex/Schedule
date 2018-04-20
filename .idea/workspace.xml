@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5d9a9b99-505d-4232-8cf2-a4c964cb066f" name="Default" comment="added all flights">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Schedule/Reader.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Schedule/Reader.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Algorithm/LocalSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Algorithm/LocalSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Flight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Reader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Reader.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,8 +19,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="244" column="9" selection-start-line="244" selection-start-column="9" selection-end-line="244" selection-end-column="9" />
+            <state relative-caret-position="3558">
+              <caret line="242" column="68" selection-start-line="242" selection-start-column="68" selection-end-line="242" selection-end-column="68" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -45,8 +43,8 @@
       <file leaf-file-name="LocalSearch.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Algorithm/LocalSearch.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="446" column="99" selection-start-line="446" selection-start-column="99" selection-end-line="446" selection-end-column="99" />
+            <state relative-caret-position="29">
+              <caret line="521" column="94" lean-forward="true" selection-start-line="521" selection-start-column="94" selection-end-line="521" selection-end-column="94" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -58,7 +56,7 @@
         <entry file="file://$PROJECT_DIR$/src/Entity/AircraftType.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="221">
-              <caret line="40" column="25" lean-forward="true" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
+              <caret line="40" column="25" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
               <folding>
                 <element signature="e#1462#1463#0" expanded="true" />
                 <element signature="e#1488#1489#0" expanded="true" />
@@ -96,8 +94,8 @@
       <file leaf-file-name="Path.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Entity/Path.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="28" column="16" selection-start-line="28" selection-start-column="16" selection-end-line="28" selection-end-column="16" />
+            <state relative-caret-position="413">
+              <caret line="47" column="16" selection-start-line="47" selection-start-column="16" selection-end-line="47" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1076#1077#0" expanded="true" />
@@ -110,8 +108,8 @@
       <file leaf-file-name="FlightFactory.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Factory/FlightFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+            <state relative-caret-position="413">
+              <caret line="98" column="19" selection-start-line="98" selection-start-column="19" selection-end-line="98" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -122,14 +120,16 @@
       <file leaf-file-name="Flight.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Entity/Flight.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="212" column="24" selection-start-line="212" selection-start-column="18" selection-end-line="212" selection-end-column="24" />
+            <state relative-caret-position="164">
+              <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2971#2972#0" expanded="true" />
                 <element signature="e#3006#3007#0" expanded="true" />
                 <element signature="e#3645#3646#0" expanded="true" />
                 <element signature="e#3689#3690#0" expanded="true" />
+                <element signature="e#4478#4479#0" expanded="true" />
+                <element signature="e#4537#4538#0" expanded="true" />
                 <element signature="e#5012#5013#0" expanded="true" />
                 <element signature="e#5052#5053#0" expanded="true" />
                 <element signature="e#8131#8132#0" expanded="true" />
@@ -173,8 +173,13 @@
       <find>serviceLevel</find>
       <find>mand</find>
       <find>sqr</find>
-      <find>demand</find>
       <find>helpE</find>
+      <find>demand</find>
+      <find>cruise</find>
+      <find>cruisetime</find>
+      <find>firstVa</find>
+      <find>writeto</find>
+      <find>cruisetimelower</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -189,9 +194,9 @@
         <option value="$PROJECT_DIR$/src/LocalSearch.java" />
         <option value="$PROJECT_DIR$/src/Factory/FlightFactory.java" />
         <option value="$PROJECT_DIR$/src/Entity/AircraftType.java" />
-        <option value="$PROJECT_DIR$/src/Entity/Flight.java" />
         <option value="$PROJECT_DIR$/src/Reader.java" />
         <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/Entity/Flight.java" />
         <option value="$PROJECT_DIR$/src/Algorithm/LocalSearch.java" />
       </list>
     </option>
@@ -202,11 +207,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1" />
+    <option name="y" value="1" />
+    <option name="width" value="1918" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -248,7 +253,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/xmlbeans.jar!/" />
+    <property name="last_opened_file_path" value="C:/cihm_9.0.1.6_fix22" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -753,12 +758,12 @@
       <updated>1522059015674</updated>
       <workItem from="1522059018586" duration="8098000" />
       <workItem from="1522396780276" duration="16233000" />
-      <workItem from="1522761383652" duration="55089000" />
+      <workItem from="1522761383652" duration="62862000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="79420000" />
+    <option name="totallyTimeSpent" value="87193000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -857,6 +862,8 @@
             <element signature="e#3006#3007#0" expanded="true" />
             <element signature="e#3645#3646#0" expanded="true" />
             <element signature="e#3689#3690#0" expanded="true" />
+            <element signature="e#4478#4479#0" expanded="true" />
+            <element signature="e#4537#4538#0" expanded="true" />
             <element signature="e#5012#5013#0" expanded="true" />
             <element signature="e#5052#5053#0" expanded="true" />
             <element signature="e#8131#8132#0" expanded="true" />
@@ -946,6 +953,8 @@
             <element signature="e#3006#3007#0" expanded="true" />
             <element signature="e#3645#3646#0" expanded="true" />
             <element signature="e#3689#3690#0" expanded="true" />
+            <element signature="e#4478#4479#0" expanded="true" />
+            <element signature="e#4537#4538#0" expanded="true" />
             <element signature="e#5012#5013#0" expanded="true" />
             <element signature="e#5052#5053#0" expanded="true" />
             <element signature="e#8131#8132#0" expanded="true" />
@@ -1039,21 +1048,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/AircraftType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="40" column="25" lean-forward="true" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
-          <folding>
-            <element signature="e#1462#1463#0" expanded="true" />
-            <element signature="e#1488#1489#0" expanded="true" />
-            <element signature="e#2041#2042#0" expanded="true" />
-            <element signature="e#2078#2079#0" expanded="true" />
-            <element signature="e#2116#2117#0" expanded="true" />
-            <element signature="e#2153#2154#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/lang/Math.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -1071,10 +1065,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/results.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6">
+          <caret line="23" column="26" lean-forward="true" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/AircraftType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="40" column="25" selection-start-line="40" selection-start-column="25" selection-end-line="40" selection-end-column="25" />
+          <folding>
+            <element signature="e#1462#1463#0" expanded="true" />
+            <element signature="e#1488#1489#0" expanded="true" />
+            <element signature="e#2041#2042#0" expanded="true" />
+            <element signature="e#2078#2079#0" expanded="true" />
+            <element signature="e#2116#2117#0" expanded="true" />
+            <element signature="e#2153#2154#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Factory/FlightFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="98" column="19" selection-start-line="98" selection-start-column="19" selection-end-line="98" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Entity/Path.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="28" column="16" selection-start-line="28" selection-start-column="16" selection-end-line="28" selection-end-column="16" />
+        <state relative-caret-position="413">
+          <caret line="47" column="16" selection-start-line="47" selection-start-column="16" selection-end-line="47" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1076#1077#0" expanded="true" />
@@ -1083,26 +1109,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Factory/FlightFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="17" column="18" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Entity/Flight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="212" column="24" selection-start-line="212" selection-start-column="18" selection-end-line="212" selection-end-column="24" />
+        <state relative-caret-position="164">
+          <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2971#2972#0" expanded="true" />
             <element signature="e#3006#3007#0" expanded="true" />
             <element signature="e#3645#3646#0" expanded="true" />
             <element signature="e#3689#3690#0" expanded="true" />
+            <element signature="e#4478#4479#0" expanded="true" />
+            <element signature="e#4537#4538#0" expanded="true" />
             <element signature="e#5012#5013#0" expanded="true" />
             <element signature="e#5052#5053#0" expanded="true" />
             <element signature="e#8131#8132#0" expanded="true" />
@@ -1117,25 +1135,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="244" column="9" selection-start-line="244" selection-start-column="9" selection-end-line="244" selection-end-column="9" />
+        <state relative-caret-position="3558">
+          <caret line="242" column="68" selection-start-line="242" selection-start-column="68" selection-end-line="242" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/results.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6">
-          <caret line="23" column="26" lean-forward="true" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Algorithm/LocalSearch.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="446" column="99" selection-start-line="446" selection-start-column="99" selection-end-line="446" selection-end-column="99" />
+        <state relative-caret-position="29">
+          <caret line="521" column="94" lean-forward="true" selection-start-line="521" selection-start-column="94" selection-end-line="521" selection-end-column="94" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1159,7 +1170,7 @@
       </state>
       <state key="FacetStructureConfigurable.UI">
         <settings>
-          <last-edited />
+          <last-edited>No facets are configured</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

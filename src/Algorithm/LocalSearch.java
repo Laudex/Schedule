@@ -2,19 +2,21 @@ package Algorithm;
 
 import Entity.AircraftType;
 import Entity.Flight;
+import Entity.Path;
+import Factory.FlightFactory;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class LocalSearch {
+    public static int countFile = 8;
     public static double density = 1.29;
     public static double gravAcc = 9.8;
     public static double cosBlank = 0.53;
@@ -35,6 +37,7 @@ public class LocalSearch {
     public double validation6 = 0;
     public double validation7 = 0;
     public double validation8 = 0;
+    FlightFactory factory = new FlightFactory();
 
     // ограничение (5)
     public double validateFirstConstraint(ArrayList<Flight> flights) {
@@ -160,7 +163,7 @@ public class LocalSearch {
         return validation;
     }
 
-    public void firstValidation(ArrayList<Flight> flights, ArrayList<Flight> conFlights) {
+    public void firstValidation(ArrayList<Flight> flights, ArrayList<Flight> conFlights, ArrayList<Path> paths) {
         double totalValidation = 0;
         // totalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
         validation1 = validateFirstConstraint(conFlights);
@@ -182,7 +185,8 @@ public class LocalSearch {
         totalValidation = validation1 + validation2 + validation3 + validation4 + validation5 + validation6 + validation7 + validation8;
 
         System.out.println(totalValidation);
-        localSearchExecute(flights, totalValidation, conFlights);
+        reassignAircraft(flights, totalValidation, conFlights, paths);
+        //localSearchExecute(flights, totalValidation, conFlights, paths);
 
     }
 
@@ -286,6 +290,23 @@ public class LocalSearch {
         return totalValidation;
     }
 
+    public double searchWithinCruiseTimeUpdate(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
+        double newTotalValidation = 0;
+        for (Flight flight : flights) {
+            int currentCruiseTime = flight.getCruiseTime();
+            for (int i = flight.getCruiseTimeLower(); i <= flight.getCruiseTimeUpper(); i++) {
+                setNewCruiseTime(i, flight);
+                newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                if (newTotalValidation < totalValidation) {
+                    totalValidation = newTotalValidation;
+                    return totalValidation;
+                }
+            }
+            setNewCruiseTime(currentCruiseTime, flight);
+        }
+        return totalValidation;
+    }
+
     public double searchWithinDepTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
         double newTotalValidation = 0;
         for (Flight flight : flights) {
@@ -312,6 +333,25 @@ public class LocalSearch {
         return totalValidation;
     }
 
+    public double searchWithinDepTimeUpdate(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
+        double newTotalValidation = 0;
+        for (Flight flight : flights) {
+            if (!flight.isFirstInPath()) {
+                int currentDepTime = flight.getDepTimeInMin();
+                for (int i = flight.getDepTimeLower(); i <= flight.getDepTimeUpper(); i++) {
+                    setNewDepTime(i, flight);
+                    newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                    if (newTotalValidation < totalValidation) {
+                        totalValidation = newTotalValidation;
+                        return totalValidation;
+                    }
+                }
+                setNewDepTime(currentDepTime, flight);
+            }
+        }
+        return totalValidation;
+    }
+
     public double searchWithinIdleTime(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
         double newTotalValidation = 0;
         for (Flight flight : flights) {
@@ -332,6 +372,23 @@ public class LocalSearch {
             } else {
                 setNewIdleTime(currentBetterIdleTime, flight);
             }
+        }
+        return totalValidation;
+    }
+
+    public double searchWithinIdleTimeUpdate(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
+        double newTotalValidation = 0;
+        for (Flight flight : flights) {
+            int currentIdleTime = flight.getIdleTime();
+            for (int i = 0; i <= 50; i++) {
+                setNewIdleTime(i, flight);
+                newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
+                if (newTotalValidation < totalValidation) {
+                    totalValidation = newTotalValidation;
+                    return totalValidation;
+                }
+            }
+            setNewIdleTime(currentIdleTime, flight);
         }
         return totalValidation;
     }
@@ -374,6 +431,7 @@ public class LocalSearch {
                     newTotalValidation = validateFirstConstraint(conFlights) + validateSecondConstraint(conFlights) + validateThirdConstraint(flights) + validateFourthConstraint(flights) + validateFifthConstraint(flights) + validateSixthConstraint(flights) + validateSeventhConstraint(flights) + validateEighthConstraint(conFlights);
                     if (newTotalValidation < totalValidation) {
                         totalValidation = newTotalValidation;
+                        return totalValidation;
                     } else {
                         setNewServiceLevel(currentServiceLevel, flight, pFlight);
                     }
@@ -387,8 +445,9 @@ public class LocalSearch {
     public void writeToFile(ArrayList<Flight> flights, ArrayList<Flight> conFlights, double cost) {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter("results.txt", "UTF-8");
-            writer.write("id   Departure Time   Planned Arr Time   Actual Arr Time     Cruise Time   Origin Airport   Destination Airport\n");
+            String fileName = "result"+countFile+".txt";
+            writer = new PrintWriter(fileName, "UTF-8");
+            writer.write("id   Departure Time   Planned Arr Time   Actual Arr Time     Cruise Time   Origin Airport   Destination Airport   AurCraft Type\n");
             for (Flight flight : flights) {
                 writer.write(flight.toFile());
                 writer.write("\n");
@@ -401,6 +460,7 @@ public class LocalSearch {
                 }
             }
             writer.write("Total cost = " + cost);
+            countFile++;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -408,6 +468,30 @@ public class LocalSearch {
             e.printStackTrace();
         }
         writer.close();
+    }
+
+    public void assignNewAircraftType(Path path, AircraftType type){
+        path.setAssignedAircraftType(type);
+        ArrayList<Flight> flights = path.getSetOfFlights();
+        factory.setCruiseTimeBounds(flights);
+    }
+
+    public void reassignAircraft(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights, ArrayList<Path> paths){
+        localSearchExecute(flights, totalValidation, conFlights);
+        for(Path firstPath : paths){
+            AircraftType firstType = firstPath.getAssignedAircraftType();
+            for(Path secondPath : paths){
+                AircraftType secondType = secondPath.getAssignedAircraftType();
+                if(firstType.getTypeId() != secondType.getTypeId()){
+                    assignNewAircraftType(firstPath, secondType);
+                    assignNewAircraftType(secondPath, firstType);
+                    localSearchExecute(flights, totalValidation, conFlights);
+                    assignNewAircraftType(firstPath, firstType);
+                    assignNewAircraftType(secondPath, secondType);
+                }
+            }
+
+        }
     }
 
     public double costFunction(ArrayList<Flight> flights){
@@ -429,32 +513,43 @@ public class LocalSearch {
         return cost;
     }
 
-    public void localSearchExecute(ArrayList<Flight> flights, double totalValidation, ArrayList<
-            Flight> conFlights) {
+    public void localSearchExecute(ArrayList<Flight> flights, double totalValidation, ArrayList<Flight> conFlights) {
         for (int i = 1; i <= 200; i++) {
-            //totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
+            /*totalValidation = searchWithinDepTimeUpdate(flights, totalValidation, conFlights);
             totalValidation = searchWithinServiceLevelUpdate(flights, totalValidation, conFlights);
-            totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
-            totalValidation = searchWithinIdleTime(flights, totalValidation, conFlights);
-
+            totalValidation = searchWithinIdleTimeUpdate(flights,totalValidation,conFlights);
+            totalValidation = searchWithinCruiseTimeUpdate(flights,totalValidation,conFlights);
+            totalValidation = searchWithinDepTimeUpdate(flights, totalValidation, conFlights);
+            totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
+            */
             totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
             totalValidation = searchWithinCruiseTime(flights, totalValidation, conFlights);
-            totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
-            totalValidation = searchWithinIdleTime(flights, totalValidation, conFlights);
-
-
             totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
-            totalValidation = searchWithinServiceLevelUpdate(flights, totalValidation, conFlights);
+            totalValidation = searchWithinIdleTime(flights, totalValidation, conFlights);
+            totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
+
+
 
             if (totalValidation <= 0.01) {
                 System.out.println("Iteration: " + i);
                 double cost = costFunction(flights);
                 System.out.println("Cost: " + cost);
                 writeToFile(flights, conFlights, cost);
-
-                break;
+                return;
             }
         }
+        if (totalValidation > 0.01){
+            totalValidation = searchWithinCruiseTime(flights, totalValidation, conFlights);
+            totalValidation = searchWithinDepTime(flights, totalValidation, conFlights);
+            totalValidation = searchWithinServiceLevel(flights, totalValidation, conFlights);
+            totalValidation = searchWithinIdleTime(flights, totalValidation, conFlights);
+        }
+        if (totalValidation <= 0.01) {
+            double cost = costFunction(flights);
+            System.out.println("Cost: " + cost);
+            writeToFile(flights, conFlights, cost);
+        }
+
         // System.out.println(totalValidation);
 
         validation1 = validateFirstConstraint(conFlights);
