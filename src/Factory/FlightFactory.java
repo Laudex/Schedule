@@ -31,6 +31,16 @@ public class FlightFactory {
         }
     }
 
+    public void setIdleTime(ArrayList<Flight> flightsList) {
+        Flight[] flights = flightsList.toArray(new Flight[0]);
+        for (int i = 0; i < flights.length; i++) {
+            if (flights[i].getNextFlight() != null) {
+                //System.out.println(flights[i].getNextFlight().getId());
+                flights[i].setIdleTime();
+            }
+        }
+    }
+
     public ArrayList<Flight> getConnectedFlights(ArrayList<Flight> flights) {
         ArrayList<Flight> connectedFlights = new ArrayList<>();
         for (Flight flight : flights) {

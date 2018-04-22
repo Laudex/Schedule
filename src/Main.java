@@ -32,7 +32,7 @@ public class Main {
         AirportFactory airportFactory = new AirportFactory();
         HashMap<String, Airport> airportMap = airportFactory.buildAirportMap();
 
-        ArrayList<Path> paths = new ArrayList<>();
+        /*ArrayList<Path> paths = new ArrayList<>();
         ArrayList<Flight> flights = new ArrayList<>();
 
         AircraftType b767300 = new AircraftType(1, 218, 135000, 283.3, 0.021, 0.049, 0.763, 1430, 1.0347, 876.70, 40, 147, 4, 160, 218);
@@ -43,10 +43,10 @@ public class Main {
         //6:20
         int startTime = 0;
 
-        /*for(Map.Entry<String, Airport> entry : airportMap.entrySet()){
+        *//*for(Map.Entry<String, Airport> entry : airportMap.entrySet()){
             System.out.println(entry.getKey() + " " + entry.getValue().getCongestion());
         }
-        */
+        *//*
 
 
 
@@ -215,20 +215,9 @@ public class Main {
         paths.add(path9);
         paths.add(path10);
         paths.add(path11);
-        paths.add(path12);
+        paths.add(path12);*/
 
-        for (Flight flightStart : flights){
-            for (Flight flightFinish : flights){
-                if (flightStart.getPlannedArrTimeInMin() + 40 >= flightFinish.getDepTimeInMin() && flightStart.getPlannedArrTimeInMin() <= flightFinish.getDepTimeInMin() && flightStart.getDestinationAirport().getId() == flightFinish.getOriginAirport().getId()){
-                    flightStart.addToPasConnected(flightFinish);
-                }
-            }
-        }
 
-        ArrayList<Flight> connectedFlights = flightFactory.getConnectedFlights(flights);
-        flightFactory.setTurnTime(connectedFlights);
-        flightFactory.setServiceLevel(connectedFlights);
-        flightFactory.setWeights(connectedFlights);
 
         /*for(Flight f : connectedFlights){
             ArrayList<Flight> p = f.getPasConnected();
@@ -238,11 +227,43 @@ public class Main {
                 }
             }
         }*/
-        flightFactory.setCruiseTimeBounds(flights);
+
         LocalSearch localSearch = new LocalSearch();
-        localSearch.firstValidation(flights, connectedFlights, paths);
-       // Reader reader = new Reader();
-       // reader.readFromExcel("C:\\Schedule\\AircraftType.xlsx");
+        //localSearch.firstValidation(flights, connectedFlights, paths);
+        Reader reader = new Reader();
+        HashMap<Integer, AircraftType> typeHashMap = reader.readAirCraftTypesFromExcel("E:\\Schedule\\Schedule\\AircraftType.xlsx");
+        for(Map.Entry<Integer, AircraftType> entry : typeHashMap.entrySet()){
+            System.out.println(entry.getKey() + " " + entry.getValue().getCapacity());
+        }
+        reader.read114FlightsFromExcel("E:\\Schedule\\Schedule\\114Flights.xlsx", typeHashMap, airportMap);
+        ArrayList<Path> paths = reader.getPaths();
+        ArrayList<Flight> flights = reader.getFlights();
+
+        for (Flight flightStart : flights){
+            for (Flight flightFinish : flights){
+                if (flightStart.getPlannedArrTimeInMin() + 40 >= flightFinish.getDepTimeInMin() && flightStart.getPlannedArrTimeInMin() <= flightFinish.getDepTimeInMin() && flightStart.getDestinationAirport().getId() == flightFinish.getOriginAirport().getId()){
+                    flightStart.addToPasConnected(flightFinish);
+                }
+            }
+        }
+        FlightFactory flightFactory = new FlightFactory();
+
+        ArrayList<Flight> connectedFlights = flightFactory.getConnectedFlights(flights);
+
+        flightFactory.setTurnTime(connectedFlights);
+        flightFactory.setServiceLevel(connectedFlights);
+        flightFactory.setWeights(connectedFlights);
+        flightFactory.setCruiseTimeBounds(flights);
+
+        for(Flight f : connectedFlights){
+            ArrayList<Flight> p = f.getPasConnected();
+            if (!p.isEmpty()){
+                for(Flight flight : p){
+                    System.out.println(f.getId() + " linked with " + flight.getId() + " with Weights = " + f.getServiceLevel().get(flight.getId()));
+                }
+            }
+        }
+
 
 
 

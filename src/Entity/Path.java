@@ -9,6 +9,9 @@ public class Path {
     public ArrayList<Flight> setOfFlights;
     public AircraftType assignedAircraftType;
 
+    public Path() {
+    }
+
     public Path(int id, AircraftType assignedAircraftType) {
         this.id = id;
         this.assignedAircraftType = assignedAircraftType;
@@ -30,6 +33,24 @@ public class Path {
         ArrayList<Flight> set = new ArrayList<>();
         boolean prevExist = false;
         Flight prevFlight;
+        for (int i = 0; i < flights.length; i++){
+            if (i+1 != flights.length){
+                flights[i].setNextFlight(flights[i+1]);
+            } else {
+                flights[i].setNextFlight(null);
+            }
+            set.add(flights[i]);
+        }
+        this.setOfFlights = set;
+    }
+
+    public void setSetOfFlights(ArrayList<Flight> flightsList) {
+       // System.out.println(flightsList.size());
+        Flight[] flights = flightsList.toArray(new Flight[flightsList.size()]);
+        ArrayList<Flight> set = new ArrayList<>();
+        boolean prevExist = false;
+        Flight prevFlight;
+        //System.out.println(flights.length);
         for (int i = 0; i < flights.length; i++){
             if (i+1 != flights.length){
                 flights[i].setNextFlight(flights[i+1]);
